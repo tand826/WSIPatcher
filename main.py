@@ -22,9 +22,7 @@ class Application(ttk.Frame):
             self,
             text="Open File",
             command=self.select_wsis
-        )
-        self.wsi_select.grid(column=0, row=0)
-        print(self.wsi_select.winfo_height())
+        ).grid(column=0, row=0)
 
         self.selected_files_list = []
         self.selected_files = tk.Listbox(
@@ -36,18 +34,19 @@ class Application(ttk.Frame):
         self.selected_files.grid(column=0, row=1, rowspan=11, sticky=tk.N+tk.S)
 
         self.add_combobox(
-            "method", ["none", "classification", "detection", "segmentation"], col=1, row=1)
-        self.add_dialog_box("where to save", self.select_one_directory, col=1, row=2)
-        self.add_dialog_box("annotation file", self.select_one_file, col=1, row=3)
-        self.add_dialog_box("inclusion file", self.select_one_file, col=1, row=4)
-        self.add_param_box("patch width", col=1, row=5)
-        self.add_param_box("patch height", col=1, row=6)
-        self.add_param_box("overlap width", col=1, row=7)
-        self.add_param_box("overlap height", col=1, row=8)
-        self.add_param_box("ratio of foreground", col=1, row=9)
-        self.add_param_box("ratio of annotation", col=1, row=10)
-        self.add_param_box("magnification", col=1, row=11)
-        self.add_run_button(col=1, row=0)
+            "method", ["none", "classification", "detection", "segmentation"], col=1, row=0)
+        self.add_dialog_box("where to save", self.select_one_directory, col=1, row=1)
+        self.add_dialog_box("annotation file", self.select_one_file, col=1, row=2)
+        self.add_dialog_box("inclusion file", self.select_one_file, col=1, row=3)
+        self.add_param_box("patch width", col=1, row=4)
+        self.add_param_box("patch height", col=1, row=5)
+        self.add_param_box("overlap width", col=1, row=6)
+        self.add_param_box("overlap height", col=1, row=7)
+        self.add_param_box("ratio of foreground", col=1, row=8)
+        self.add_param_box("ratio of annotation", col=1, row=9)
+        self.add_combobox("magnification", ["40", "20", "10"], col=1, row=10)
+        self.add_run_button(col=1, row=11)
+        self.add_status_bar(col=0, row=12)
 
     def add_dialog_box(self, param_name, callback, col, row):
         self.labels[param_name] = ttk.Label(
@@ -71,11 +70,14 @@ class Application(ttk.Frame):
                 self.selected_files_list.append(file)
                 self.selected_files.insert("end", Path(file).name)
 
+        self.params["status"].set("Selected {} files".format(len(files)))
+
     def select_one_file(self, param_name):
         selected = filedialog.askopenfilename(
             initialdir=Path.home(),
         )
         self.params[param_name].set(selected)
+        self.params["status"].set("Selected {}".format(selected))
         return selected
 
     def select_one_directory(self, param_name):
@@ -83,12 +85,14 @@ class Application(ttk.Frame):
             initialdir=Path.home(),
         )
         self.params[param_name].set(selected)
+        self.params["status"].set("Selected {}".format(selected))
         return selected
 
     def add_param_box(self, param_name, col, row):
         ttk.Label(
             self,
-            text=param_name
+            text=param_name,
+            justify=tk.RIGHT
         ).grid(column=col, row=row)
         ttk.Entry(
             self,
@@ -96,13 +100,24 @@ class Application(ttk.Frame):
         ).grid(column=col+1, row=row)
 
     def add_combobox(self, param_name, dropdowns, col, row):
+        ttk.Label(
+            self,
+            text=param_name
+        ).grid(column=col, row=row)
         box = ttk.Combobox(
             self,
             state='readonly',
             values=dropdowns,
         )
         box.current(0)
-        box.grid(column=col, row=row)
+        box.grid(column=col+1, row=row)
+
+    def add_status_bar(self, col, row):
+        ttk.Label(
+            self,
+            textvariable=self.params["status"],
+            anchor="w"
+        ).grid(column=col, row=row, rowspan=3)
 
     def add_run_button(self, col, row):
         ttk.Button(
@@ -158,8 +173,9 @@ class Application(ttk.Frame):
         #self.thumbnail_label.pack(side="top")
 
     def set_window(self):
-        self.master.geometry("580x310")
+        self.master.geometry("515x327")
         self.master.title("WSI Patcher")
+        self.master.configure(bg="white")
         # self.selected_files_scrollbar = tk.Scrollbar(self)
         # self.selected_files_scrollbar.pack(fill="y")
 
@@ -193,7 +209,8 @@ class Application(ttk.Frame):
             "overlap height": tk.IntVar(value=1),
             "ratio of foreground": tk.DoubleVar(value=0.5),
             "ratio of annotation": tk.DoubleVar(value=0.5),
-            "magnification": tk.IntVar(value=20)
+            "magnification": tk.IntVar(value=20),
+            "status": tk.StringVar(value="")
         }
 
     def change_name(self, filename):
