@@ -1,6 +1,7 @@
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog
+
 import wsiprocess as wp
 
 
@@ -39,11 +40,14 @@ class Application(ttk.Frame):
             ["none", "classification", "detection", "segmentation"],
             col=1, row=0)
         self.add_dialog_box(
-            "where to save", self.select_one_directory, col=1, row=1)
-        self.add_dialog_box("annotation file",
-                            self.select_one_file, col=1, row=2)
+            "where to save",
+            self.select_one_directory, col=1, row=1)
         self.add_dialog_box(
-            "inclusion file", self.select_one_file, col=1, row=3)
+            "annotation file",
+            self.select_one_file, col=1, row=2)
+        self.add_dialog_box(
+            "inclusion file",
+            self.select_one_file, col=1, row=3)
         self.add_param_box("patch width", col=1, row=4)
         self.add_param_box("patch height", col=1, row=5)
         self.add_param_box("overlap width", col=1, row=6)
@@ -167,7 +171,7 @@ class Application(ttk.Frame):
         patcher.get_patch_parallel(classes)
 
     def show_thumb_when_selected(self, event):
-        return  # no operation for now
+        return
         # idx = self.selected_files.curselection()[0]
         # filepath = self.selected_files_list[idx]
         # slide = wp.slide(filepath)
@@ -175,19 +179,15 @@ class Application(ttk.Frame):
         # slide.get_thumbnail(256).pngsave(thumbname)
         # image = ImageTk.PhotoImage(file=thumbname)
         # self.thumbnail_label = ttk.Label(
-        #    self.master,
-        #    image=image
+        #    self
         # )
+        # self.thumbnail_label.image = image
         # self.thumbnail_label.pack(side="top")
 
     def set_window(self):
         self.master.geometry("521x315")
         self.master.title("WSI Patcher")
         self.master.configure(bg="#ECECEC")
-        self.master.resizable(0, 0)
-        self.master.columnconfigure(0, weight=1)
-        self.master.columnconfigure(1, weight=1)
-        self.master.columnconfigure(2, weight=1)
 
     def set_types(self):
         self.types = [
