@@ -22,3 +22,12 @@ TODO:add later
 
 1. install python
 2. pip install -r requirements.txt
+
+# Building from source
+
+### windows
+
+```
+pip install pyinstaller
+pyinstaller main.py --onefile
+```
