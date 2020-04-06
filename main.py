@@ -58,7 +58,7 @@ class Application(ttk.Frame):
         self.add_combobox("magnification", ["40", "20", "10"], col=0, row=17)
         self.add_run_button(col=0, row=18)
         self.add_canvas(width=256, height=256, col=1, row=0)
-        # self.add_status_bar(col=2, row=12)
+        self.add_status_bar(col=0, row=19)
 
     def add_dialog_box(self, param_name, callback, col, row):
         self.labels[param_name] = ttk.Entry(
@@ -130,8 +130,9 @@ class Application(ttk.Frame):
         ttk.Label(
             self,
             textvariable=self.params["status"],
-            anchor="w"
-        ).grid(column=col, row=row, rowspan=3)
+            anchor="e",
+            justify="left"
+        ).grid(column=col, row=row, columnspan=2)
 
     def add_canvas(self, width, height, col, row):
         self.thumb_canvas = tk.Canvas(
@@ -194,7 +195,7 @@ class Application(ttk.Frame):
         )
 
     def set_window(self):
-        self.master.geometry("467x577")
+        self.master.geometry("467x597")
         self.master.title("WSI Patcher")
         self.master.configure(bg="#ECECEC")
 
