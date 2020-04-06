@@ -12,10 +12,9 @@ Extract patches from whole slide images
 
 1. Downlload wsipatcher-v0.1.zip from [releases](https://github.com/tand826/WSIPatcher/releases)
 2. Download vips-dev-w64-all-8.9.1.zip from [libvips](https://github.com/libvips/libvips/releases)
-3. Make a folder with any name you like (described as "wsipatcher" below).
-4. Unzip wsipatcher-v0.1.zip and vips-dev-w64-all-8.9.1.zip
-5. Copy wsipatcher-v0.1/WSIPatcher.exe to "wsipatcher"
-6. Copy all the libraries in vips-dev-w64-all-8.9.1/vips-dev-w64-all-8.9.1/bin to "wsipatcher"
+3. Unzip wsipatcher-v0.1.zip and vips-dev-w64-all-8.9.1.zip
+4. Copy wsipatcher-v0.1/WSIPatcher.exe to "wsipatcher-v0.1"
+5. Copy all the files in vips-dev-w64-all-8.9.1/vips-dev-w64-all-8.9.1/bin to "wsipatcher-v0.1"
 
 ### MacOS / Linus
 
