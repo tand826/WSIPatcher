@@ -2,6 +2,7 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog
 
+from PIL import ImageTk
 import wsiprocess as wp
 
 
@@ -33,29 +34,30 @@ class Application(ttk.Frame):
         self.selected_files.bind(
             '<ButtonRelease-1>', self.show_thumb_when_selected)
         self.selected_files.grid(
-            column=0, row=1, rowspan=11, sticky=tk.N+tk.S, padx=3)
+            column=0, row=1, rowspan=6, sticky=tk.NS, padx=3)
 
         self.add_combobox(
             "method",
             ["none", "classification", "detection", "segmentation"],
-            col=1, row=0)
+            col=0, row=7)
         self.add_dialog_box(
             "where to save",
-            self.select_one_directory, col=1, row=1)
+            self.select_one_directory, col=0, row=8)
         self.add_dialog_box(
             "annotation file",
-            self.select_one_file, col=1, row=2)
+            self.select_one_file, col=0, row=9)
         self.add_dialog_box(
             "inclusion file",
-            self.select_one_file, col=1, row=3)
-        self.add_param_box("patch width", col=1, row=4)
-        self.add_param_box("patch height", col=1, row=5)
-        self.add_param_box("overlap width", col=1, row=6)
-        self.add_param_box("overlap height", col=1, row=7)
-        self.add_param_box("ratio of foreground", col=1, row=8)
-        self.add_param_box("ratio of annotation", col=1, row=9)
-        self.add_combobox("magnification", ["40", "20", "10"], col=1, row=10)
-        self.add_run_button(col=1, row=11)
+            self.select_one_file, col=0, row=10)
+        self.add_param_box("patch width", col=0, row=11)
+        self.add_param_box("patch height", col=0, row=12)
+        self.add_param_box("overlap width", col=0, row=13)
+        self.add_param_box("overlap height", col=0, row=14)
+        self.add_param_box("ratio of foreground", col=0, row=15)
+        self.add_param_box("ratio of annotation", col=0, row=16)
+        self.add_combobox("magnification", ["40", "20", "10"], col=0, row=17)
+        self.add_run_button(col=0, row=18)
+        self.add_canvas(width=256, height=256, col=1, row=0)
         # self.add_status_bar(col=2, row=12)
 
     def add_dialog_box(self, param_name, callback, col, row):
@@ -131,6 +133,15 @@ class Application(ttk.Frame):
             anchor="w"
         ).grid(column=col, row=row, rowspan=3)
 
+    def add_canvas(self, width, height, col, row):
+        self.thumb_canvas = tk.Canvas(
+            self,
+            width=width,
+            height=height,
+            bg="#ECECEC"
+        )
+        self.thumb_canvas.grid(column=col, row=row, padx=3, rowspan=7)
+
     def add_run_button(self, col, row):
         ttk.Button(
             self,
@@ -171,21 +182,19 @@ class Application(ttk.Frame):
         patcher.get_patch_parallel(classes)
 
     def show_thumb_when_selected(self, event):
-        return
-        # idx = self.selected_files.curselection()[0]
-        # filepath = self.selected_files_list[idx]
-        # slide = wp.slide(filepath)
-        # thumbname = "{}.png".format(Path(filepath).stem)
-        # slide.get_thumbnail(256).pngsave(thumbname)
-        # image = ImageTk.PhotoImage(file=thumbname)
-        # self.thumbnail_label = ttk.Label(
-        #    self
-        # )
-        # self.thumbnail_label.image = image
-        # self.thumbnail_label.pack(side="top")
+        idx = self.selected_files.curselection()[0]
+        filepath = self.selected_files_list[idx]
+        slide = wp.slide(filepath)
+        slide.export_thumbnail(save_to=".", size=256)
+        self.thumb = ImageTk.PhotoImage(file="thumb.png")
+        x = (256-self.thumb.width())/2
+        y = (256-self.thumb.height())/2
+        self.thumb_canvas.create_image(
+            x, y, image=self.thumb, anchor=tk.NW
+        )
 
     def set_window(self):
-        self.master.geometry("521x315")
+        self.master.geometry("467x577")
         self.master.title("WSI Patcher")
         self.master.configure(bg="#ECECEC")
 
