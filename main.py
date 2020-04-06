@@ -127,12 +127,15 @@ class Application(ttk.Frame):
         box.grid(column=col+1, row=row)
 
     def add_status_bar(self, col, row):
-        ttk.Label(
+        style = ttk.Style()
+        style.configure("Statusbar.TEntry",
+                        background="#ECECEC", bordercolor="#ECECEC")
+        ttk.Entry(
             self,
             textvariable=self.params["status"],
-            anchor="e",
-            justify="left"
-        ).grid(column=col, row=row, columnspan=2)
+            justify="left",
+            style="Statusbar.TEntry"
+        ).grid(column=col, row=row, columnspan=2, sticky=tk.E+tk.W)
 
     def add_canvas(self, width, height, col, row):
         self.thumb_canvas = tk.Canvas(
@@ -195,7 +198,7 @@ class Application(ttk.Frame):
         )
 
     def set_window(self):
-        self.master.geometry("467x597")
+        self.master.geometry("456x602")
         self.master.title("WSI Patcher")
         self.master.configure(bg="#ECECEC")
 
