@@ -1,1 +1,2 @@
 wsiprocess
+pillow
