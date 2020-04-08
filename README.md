@@ -2,9 +2,12 @@
 
 Extract patches from whole slide images
 
+<img src="images/window.png" height="350px">
+
 # What is this?
 
 - Extract patches from whole slide images with GUI.
+- Running <img src="images/logo.png" height="25px"> in background.
 
 # Installation
 
