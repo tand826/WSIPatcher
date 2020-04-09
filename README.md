@@ -7,7 +7,7 @@ Extract patches from whole slide images
 # What is this?
 
 - Extract patches from whole slide images with GUI.
-- Running <img src="images/logo.png" height="25px"> in background.
+- Running <a href="https://github.com/tand826/wsiprocess"><img src="images/logo.png" height="25px"></a> in background.
 
 # Installation
 
