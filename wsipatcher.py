@@ -56,9 +56,11 @@ class Application(ttk.Frame):
         self.add_param_box("ratio of foreground", col=0, row=15)
         self.add_param_box("ratio of annotation", col=0, row=16)
         self.add_combobox("magnification", ["40", "20", "10"], col=0, row=17)
-        self.add_run_button(col=0, row=18)
+        self.add_checkbox("convert to", "VOC", col=0, row=18)
+        self.add_checkbox("convert to", "COCO", col=0, row=19)
+        self.add_run_button(col=0, row=20)
         self.add_canvas(width=256, height=256, col=1, row=0)
-        self.add_status_bar(col=0, row=19)
+        self.add_status_bar(col=0, row=21)
 
     def add_dialog_box(self, param_name, callback, col, row):
         self.labels[param_name] = ttk.Entry(
@@ -126,6 +128,17 @@ class Application(ttk.Frame):
         box.current(0)
         box.grid(column=col+1, row=row)
 
+    def add_checkbox(self, param_name, param, col, row):
+        ttk.Label(
+            self,
+            text=param_name
+        ).grid(column=col, row=row)
+        ttk.Checkbutton(
+            self,
+            text=param,
+            variable=self.params[f"{param_name} {param}"]
+        ).grid(column=col+1, row=row)
+
     def add_status_bar(self, col, row):
         style = ttk.Style()
         style.configure("Statusbar.TEntry",
@@ -185,6 +198,15 @@ class Application(ttk.Frame):
             finished_sample=False,
             extract_patches=True)
         patcher.get_patch_parallel(classes)
+        if self.params["convert to voc"].get() or self.params["convert to coco"].get():
+            converter = wp.converter(
+                self.params["where to save"].get() + "/" + slide.filestem,
+                self.params["where to save"].get(),
+                "8:1:1")
+            if self.params["convert to voc"].get():
+                converter.to_voc()
+            if self.params["convert to coco"].get():
+                converter.to_coco()
 
     def show_thumb_when_selected(self, event):
         idx = self.selected_files.curselection()[0]
@@ -199,7 +221,7 @@ class Application(ttk.Frame):
         )
 
     def set_window(self):
-        self.master.geometry("456x602")
+        self.master.geometry("456x645")
         self.master.title("WSI Patcher")
         self.master.configure(bg="#ECECEC")
 
@@ -233,12 +255,14 @@ class Application(ttk.Frame):
             "overlap height": tk.IntVar(value=1),
             "ratio of foreground": tk.DoubleVar(value=0.5),
             "ratio of annotation": tk.DoubleVar(value=0.5),
+            "convert to VOC": tk.BooleanVar(),
+            "convert to COCO": tk.BooleanVar(),
             "magnification": tk.IntVar(value=20),
             "status": tk.StringVar(value="")
         }
 
     def change_name(self, filename):
-        title = f"WSI Patcher | {filename}"
+        title = f"WSI Patcher ver 0.2 | {filename} "
         self.master.title(title)
 
 
