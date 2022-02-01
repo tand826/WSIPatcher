@@ -1,2 +1,2 @@
-wsiprocess
+wsiprocess==0.9
 pillow
