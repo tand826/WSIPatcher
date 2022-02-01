@@ -38,7 +38,7 @@ class Application(ttk.Frame):
 
         self.add_combobox(
             "method",
-            ["none", "classification", "detection", "segmentation"],
+            ["evaluation", "classification", "detection", "segmentation"],
             col=0, row=7)
         self.add_dialog_box(
             "where to save",
@@ -195,8 +195,7 @@ class Application(ttk.Frame):
             on_foreground=self.params["ratio of foreground"].get(),
             on_annotation=self.params["ratio of annotation"].get(),
             start_sample=False,
-            finished_sample=False,
-            extract_patches=True)
+            finished_sample=False)
         patcher.get_patch_parallel(classes)
         if self.params["convert to voc"].get() or self.params["convert to coco"].get():
             converter = wp.converter(
@@ -212,7 +211,7 @@ class Application(ttk.Frame):
         idx = self.selected_files.curselection()[0]
         filepath = self.selected_files_list[idx]
         slide = wp.slide(filepath)
-        slide.export_thumbnail(save_to=".", size=256)
+        slide.export_thumbnail(save_as=f"{slide.filestem}.jpg", size=256)
         self.thumb = ImageTk.PhotoImage(file="thumb.png")
         x = (256-self.thumb.width())/2
         y = (256-self.thumb.height())/2
@@ -245,7 +244,7 @@ class Application(ttk.Frame):
     def set_default_params(self):
         self.params = {
             "wsi": tk.StringVar(value=""),
-            "method": tk.StringVar(value="none"),
+            "method": tk.StringVar(value="evaluation"),
             "where to save": tk.StringVar(value=Path.home().resolve()),
             "annotation file": tk.StringVar(value=""),
             "rule file": tk.StringVar(value=""),
